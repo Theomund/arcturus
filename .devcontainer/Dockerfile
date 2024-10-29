@@ -14,27 +14,24 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-FROM fedora:40
+FROM fedora:41
 RUN dnf install -y \
     --repofrompath 'terra,https://repos.fyralabs.com/terra$releasever' \
     --setopt='terra.gpgkey=https://repos.fyralabs.com/terra$releasever/key.asc' \
-    terra-release-40 \
+    terra-release-41 \
     && dnf clean all
 RUN dnf install -y \
-    bash-completion-2.11 \
+    bash-completion-2.13 \
     edk2-ovmf-20240813 \
     gcc-14.2.1 \
     gdb-15.2 \
     git-2.47.0 \
-    limine-8.1.2 \
+    limine-8.3.1 \
     make-4.4.1 \
-    qemu-system-x86-8.2.7 \
+    qemu-system-x86-9.1.1 \
     xorriso-1.5.6 \
-    && dnf clean all
-RUN dnf copr enable -y mczernek/vale \
-    && dnf install -y vale-3.7.1 \
     && dnf clean all
 RUN useradd -m developer
 USER developer
-RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain nightly-2024-10-20 --target x86_64-unknown-none
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain nightly-2024-10-29 --target x86_64-unknown-none
 ENV PATH="$PATH:/home/developer/.cargo/bin"
