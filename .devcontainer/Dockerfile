@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-FROM fedora:41
+FROM quay.io/fedora/fedora:41
 RUN dnf install -y \
     --repofrompath 'terra,https://repos.fyralabs.com/terra$releasever' \
     --setopt='terra.gpgkey=https://repos.fyralabs.com/terra$releasever/key.asc' \
