@@ -16,7 +16,9 @@
 
 use bitflags::bitflags;
 
-use crate::cpu::{instructions, registers, registers::Segment};
+use crate::instruction;
+use crate::register;
+use crate::register::Segment;
 
 #[repr(transparent)]
 struct Entry(u64);
@@ -130,13 +132,13 @@ impl GlobalDescriptorTable {
 
     fn load(&self) {
         let pointer = &self.pointer();
-        instructions::lgdt(pointer);
-        registers::CS::set(0x08);
-        registers::DS::set(0x10);
-        registers::ES::set(0x10);
-        registers::FS::set(0x10);
-        registers::GS::set(0x10);
-        registers::SS::set(0x10);
+        instruction::lgdt(pointer);
+        register::CS::set(0x08);
+        register::DS::set(0x10);
+        register::ES::set(0x10);
+        register::FS::set(0x10);
+        register::GS::set(0x10);
+        register::SS::set(0x10);
     }
 
     fn pointer(&self) -> DescriptorTablePointer {

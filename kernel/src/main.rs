@@ -18,11 +18,11 @@
 #![no_std]
 #![warn(clippy::pedantic)]
 
-mod cpu;
 mod gdt;
+mod instruction;
+mod register;
 mod serial;
 
-use cpu::instructions;
 use limine::{
     request::{RequestsEndMarker, RequestsStartMarker},
     BaseRevision,
@@ -56,8 +56,8 @@ fn kpanic(_info: &core::panic::PanicInfo) -> ! {
 }
 
 fn halt() -> ! {
-    instructions::cli();
+    instruction::cli();
     loop {
-        instructions::hlt();
+        instruction::hlt();
     }
 }
