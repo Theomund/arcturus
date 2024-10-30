@@ -14,12 +14,14 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program. If not, see <https://www.gnu.org/licenses/>.
 
+#![feature(lazy_get)]
 #![no_main]
 #![no_std]
 #![warn(clippy::pedantic)]
 
 mod gdt;
 mod instruction;
+mod lock;
 mod register;
 mod serial;
 

@@ -14,9 +14,12 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-use core::fmt::{Arguments, Result, Write};
+use core::{
+    cell::LazyCell,
+    fmt::{Arguments, Result, Write},
+};
 
-use crate::instruction;
+use crate::{instruction, lock::Spinlock};
 
 enum Ports {
     COM1 = 0x3F8,
@@ -89,8 +92,11 @@ impl Port {
     }
 }
 
+static COM1: Spinlock<LazyCell<Port>> = Spinlock::new(LazyCell::new(|| Port::new(Ports::COM1)));
+
 pub fn init() -> Result {
-    let mut port = Port::new(Ports::COM1);
+    let mut lock = COM1.lock();
+    let port = LazyCell::<Port>::force_mut(&mut lock);
     writeln!(port, "Arcturus v0.1.0 (x86_64)")?;
     writeln!(port, "Copyright (C) 2024 Theomund\n")?;
     write!(port, "[root@localhost ~]$ ")?;

@@ -14,9 +14,12 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program. If not, see <https://www.gnu.org/licenses/>.
 
+use core::cell::LazyCell;
+
 use bitflags::bitflags;
 
 use crate::instruction;
+use crate::lock::Spinlock;
 use crate::register;
 use crate::register::Segment;
 
@@ -149,7 +152,9 @@ impl GlobalDescriptorTable {
     }
 }
 
+static GDT: Spinlock<LazyCell<GlobalDescriptorTable>> =
+    Spinlock::new(LazyCell::new(GlobalDescriptorTable::new));
+
 pub fn init() {
-    let gdt = GlobalDescriptorTable::new();
-    gdt.load();
+    GDT.lock().load();
 }
