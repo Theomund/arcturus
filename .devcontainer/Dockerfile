@@ -26,12 +26,12 @@ RUN dnf install -y \
     gcc-14.2.1 \
     gdb-15.2 \
     git-2.47.0 \
-    limine-8.3.1 \
+    limine-8.3.2 \
     make-4.4.1 \
     qemu-system-x86-9.1.1 \
     xorriso-1.5.6 \
     && dnf clean all
 RUN useradd -m developer
 USER developer
-RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain nightly-2024-10-29 --target x86_64-unknown-none
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain nightly-2024-11-01 --target x86_64-unknown-none
 ENV PATH="$PATH:/home/developer/.cargo/bin"
