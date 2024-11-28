@@ -54,15 +54,15 @@ clean:
 	cargo clean
 
 .PHONY: debug-bios
-debug-bios:
+debug-bios: build
 	qemu-system-x86_64 -s -S -M q35 -m 2G -cdrom $(IMAGE)
 
 .PHONY: debug-gdb
-debug-gdb:
+debug-gdb: build
 	rust-gdb -ex "file $(KERNEL_BINARY)" -ex "target remote localhost:1234"
 
 .PHONY: debug-uefi
-debug-uefi:
+debug-uefi: $(OVMF) build
 	qemu-system-x86_64 -s -S -M q35 -m 2G -drive if=pflash,unit=0,format=raw,file=$(OVMF),readonly=on -cdrom $(IMAGE)
 
 .PHONY: format
