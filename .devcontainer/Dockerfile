@@ -15,6 +15,7 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 FROM quay.io/fedora/fedora:41
+RUN dnf copr enable -y mczernek/vale
 RUN dnf install -y \
     --repofrompath 'terra,https://repos.fyralabs.com/terra$releasever' \
     --setopt='terra.gpgkey=https://repos.fyralabs.com/terra$releasever/key.asc' \
@@ -29,6 +30,7 @@ RUN dnf install -y \
     limine-8.4.1 \
     make-4.4.1 \
     qemu-system-x86-9.1.2 \
+    vale-3.9.1 \
     xorriso-1.5.6 \
     && dnf clean all
 RUN useradd -m developer
