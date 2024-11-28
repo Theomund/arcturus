@@ -25,13 +25,13 @@ RUN dnf install -y \
     edk2-ovmf-20240813 \
     gcc-14.2.1 \
     gdb-15.2 \
-    git-2.47.0 \
-    limine-8.3.2 \
+    git-2.47.1 \
+    limine-8.4.1 \
     make-4.4.1 \
-    qemu-system-x86-9.1.1 \
+    qemu-system-x86-9.1.2 \
     xorriso-1.5.6 \
     && dnf clean all
 RUN useradd -m developer
 USER developer
-RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain nightly-2024-11-01 --target x86_64-unknown-none
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain nightly-2024-11-28 --target x86_64-unknown-none
 ENV PATH="$PATH:/home/developer/.cargo/bin"
