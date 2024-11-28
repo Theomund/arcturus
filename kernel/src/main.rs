@@ -24,6 +24,7 @@ mod instruction;
 mod lock;
 mod register;
 mod serial;
+mod tss;
 
 use limine::{
     request::{RequestsEndMarker, RequestsStartMarker},
@@ -47,6 +48,7 @@ extern "C" fn kmain() -> ! {
     assert!(BASE_REVISION.is_supported());
 
     gdt::init();
+    tss::init();
     serial::init().expect("Failed to initialize serial port driver.");
 
     halt();
