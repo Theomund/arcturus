@@ -24,6 +24,7 @@ IMAGE_ROOT := target/iso_root
 KERNEL_BINARY := target/x86_64-unknown-none/debug/kernel
 KERNEL_SOURCE := $(shell find kernel -type f)
 OVMF := /usr/share/edk2/ovmf/OVMF_CODE.fd
+STYLE := .github/styles
 
 $(IMAGE): $(BOOT_BIN) $(BOOT_CONFIG) $(BOOT_EFI) $(KERNEL_BINARY)
 	rm -rf $(IMAGE_ROOT)
@@ -43,6 +44,9 @@ $(IMAGE): $(BOOT_BIN) $(BOOT_CONFIG) $(BOOT_EFI) $(KERNEL_BINARY)
 $(KERNEL_BINARY): $(KERNEL_SOURCE)
 	cargo build -p kernel
 
+$(STYLE):
+	vale sync
+
 .PHONY: all
 all: build
 
@@ -54,24 +58,29 @@ clean:
 	cargo clean
 
 .PHONY: debug-bios
-debug-bios:
+debug-bios: build
 	qemu-system-x86_64 -s -S -M q35 -m 2G -cdrom $(IMAGE)
 
 .PHONY: debug-gdb
-debug-gdb:
+debug-gdb: build
 	rust-gdb -ex "file $(KERNEL_BINARY)" -ex "target remote localhost:1234"
 
 .PHONY: debug-uefi
-debug-uefi:
+debug-uefi: $(OVMF) build
 	qemu-system-x86_64 -s -S -M q35 -m 2G -drive if=pflash,unit=0,format=raw,file=$(OVMF),readonly=on -cdrom $(IMAGE)
+
+.PHONY: distclean
+distclean: clean
+	rm -rf $(STYLE)
 
 .PHONY: format
 format:
 	cargo fmt
 
 .PHONY: lint
-lint:
+lint: $(STYLE)
 	cargo clippy
+	vale README.md
 
 .PHONY: run-bios
 run-bios: build

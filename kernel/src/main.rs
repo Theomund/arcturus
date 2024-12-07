@@ -14,15 +14,18 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program. If not, see <https://www.gnu.org/licenses/>.
 
+#![feature(lazy_get)]
 #![no_main]
 #![no_std]
 #![warn(clippy::pedantic)]
 
-mod cpu;
 mod gdt;
+mod instruction;
+mod lock;
+mod register;
 mod serial;
+mod tss;
 
-use cpu::instructions;
 use limine::{
     request::{RequestsEndMarker, RequestsStartMarker},
     BaseRevision,
@@ -45,6 +48,7 @@ extern "C" fn kmain() -> ! {
     assert!(BASE_REVISION.is_supported());
 
     gdt::init();
+    tss::init();
     serial::init().expect("Failed to initialize serial port driver.");
 
     halt();
@@ -56,8 +60,8 @@ fn kpanic(_info: &core::panic::PanicInfo) -> ! {
 }
 
 fn halt() -> ! {
-    instructions::cli();
+    instruction::cli();
     loop {
-        instructions::hlt();
+        instruction::hlt();
     }
 }
